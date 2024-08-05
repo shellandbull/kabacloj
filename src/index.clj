@@ -1,15 +1,71 @@
 (ns index
   (:require [tablecloth.api :as tc]
+            [tablecloth.column.api :as tcc]
             [scicloj.noj.v1.vis.hanami :as hanami]
             [aerial.hanami.templates :as ht]
+            [tech.v3.dataset.categorical :as ds-cat]
+            [tech.v3.dataset.modelling :as ds-mod]
+            [tech.v3.dataset.column-filters :as cf]
             [scicloj.kindly.v4.kind :as kind]
             [scicloj.metamorph.core :as morph]
             [tablecloth.api.split :as split]
             [scicloj.metamorph.ml :as ml]
+            [tech.v3.dataset :as tds]
             [scicloj.metamorph.ml.loss :as loss]
             [scicloj.ml.smile.classification]))
 
-
 (def ds
   (-> "data/index.csv"
-      (tc/dataset)))
+      (tc/dataset {:key-fn keyword})))
+
+(tc/unique-by ds :coffee_name)
+
+(defn coffee-has-milk [str]
+  (some #(= str %) ["Latte" "American With Milk" "Cortado" "Cappuccino"]))
+
+(defn coffee-has-chocolate [str]
+  (some #(= str %) ["Cocoa" "Hot Chocolate"]))
+
+(def coffee-names
+  (apply list (-> ds
+                  (tc/select-columns [:coffee_name]))))
+
+coffee-names
+
+(def with-features
+  (-> ds
+      (tc/add-column :with-milk
+                     (fn [dataset]
+                       (map
+                        (fn [name] (coffee-has-milk name))
+                        (:coffee_name ds))))
+      (tc/add-column :with-chocolate
+                     (fn [dataset]
+                       (map
+                        (fn [name] (coffee-has-chocolate name))
+                        (:coffee_name ds))))))
+
+
+(def categorical-feature-columns [:coffee_name :with-milk :with-chocolate])
+(def target-column :cash_type)
+
+(map
+#(hash-map
+  :col-name %
+  :values  (distinct (get with-features %)))
+categorical-feature-columns)
+
+
+(tc/column-names with-features)
+(tds/descriptive-stats with-features)
+(-> with-features
+(:with-milk)
+frequencies)
+
+
+(def relevant-with-features-ds
+(-> with-features
+    (tc/select-columns (conj categorical-feature-columns target-column))
+    (tds/drop-missing)
+    (tds/categorical->number [target-column] coffee-names :float64)
+    (ds-mod/set-inference-target target-column)))
