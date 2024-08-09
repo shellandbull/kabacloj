@@ -94,3 +94,15 @@ cat-maps
 split
 
 ;; https://scicloj.github.io/noj/noj_book.ml_basic.html#train-a-model
+
+(def model-with-logistic-regression
+  (ml/train (:train split) {:model-type :smile.classification/logistic-regression}))
+
+model-with-logistic-regression
+
+(def prediction-with-logistic-regression
+  (ml/predict (:test split) model-with-logistic-regression))
+
+(-> prediction-with-dummy-classifier
+    :survived
+    frequencies)
