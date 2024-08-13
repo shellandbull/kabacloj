@@ -3,21 +3,16 @@
 Fancy a cup?
 
 [coffee-sales](https://www.kaggle.com/datasets/ihelon/coffee-sales) is one of [Kaggle's](https://www.kaggle.com/) best
-rated datasets.
+rated datasets. The dataset contains detailed records of sales for a coffee vending machine in Ukraine :ukraine: 
 
-The dataset contains detailed records of sales for a coffee vending machine in Ukraine :flag-ua:
+This repo performs a tiny application of ML algorithms(logistic regression & random forests) with the purpose to predict if you'll pay cash or card depending on the following features:
 
-This repository performs a succint application of ML algorithms with the purposes to predict various aspects of coffee sales such as:
+- The coffee has milk
+- The coffee has chocolate
+- The name of the coffee
 
-- Predicting wether or not a coffee will have milk based on the time of the day
-- Predicting wether the coffee sale will be made with cash or card
-- Predicting the hour of the day where the most coffee will be sold
-- Predicting the hour of the day where the most espresso + milk will be sold
-- Predicting the hour of the day where the most money is spent on coffee
-- Predicting where the most money is made when selling coffee based on the week of the month
+💡 It can be debated that the latter describes the first 2, but I decided to expand them as standalone features to display my feature engineering skills :godmode:
 
-My goal is to showcase my new found skills in the realm of machine learning & data engineering. 
+### The conclusion
 
-If you enjoyed the study be sure to pour yourself a strong one :godmode:
-
-You can find more about my services on my [Github profile](https://github.com/shellandbull)
+Chocolate and/or milk on a cup of coffee are not strong descriptors to define if one will pay for coffee with cash or card
