@@ -94,7 +94,7 @@ cat-maps
           relevant-with-features-ds
           cat-maps))
 
-(tc/head numeric-ds 500)
+(tc/head numeric-ds 10)
 
 
 ;; #### Mounting the model
